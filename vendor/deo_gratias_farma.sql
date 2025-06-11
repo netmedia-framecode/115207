@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Waktu pembuatan: 26 Sep 2024 pada 00.42
--- Versi server: 8.0.30
--- Versi PHP: 8.1.10
+-- Host: localhost
+-- Waktu pembuatan: 11 Jun 2025 pada 16.24
+-- Versi server: 10.4.28-MariaDB
+-- Versi PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,9 +28,9 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `auth` (
-  `id` int NOT NULL,
-  `image` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `bg` varchar(35) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `image` varchar(50) DEFAULT NULL,
+  `bg` varchar(35) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -47,9 +47,9 @@ INSERT INTO `auth` (`id`, `image`, `bg`) VALUES
 --
 
 CREATE TABLE `kategori_obat` (
-  `id_kategori` int NOT NULL,
-  `nama_kategori` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_general_ci
+  `id_kategori` int(11) NOT NULL,
+  `nama_kategori` varchar(50) NOT NULL,
+  `deskripsi` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -77,18 +77,18 @@ INSERT INTO `kategori_obat` (`id_kategori`, `nama_kategori`, `deskripsi`) VALUES
 --
 
 CREATE TABLE `obat` (
-  `id_obat` int NOT NULL,
-  `id_kategori` int NOT NULL,
-  `nama_obat` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `id_obat` int(11) NOT NULL,
+  `id_kategori` int(11) NOT NULL,
+  `nama_obat` varchar(100) NOT NULL,
   `harga_beli` decimal(10,2) NOT NULL,
   `harga_jual` decimal(10,2) NOT NULL,
-  `stok_tersedia` int NOT NULL,
-  `stok_minimum` int NOT NULL,
-  `satuan_obat` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `stok_tersedia` int(11) NOT NULL,
+  `stok_minimum` int(11) NOT NULL,
+  `satuan_obat` varchar(20) NOT NULL,
   `tanggal_kadaluarsa` date DEFAULT NULL,
-  `lokasi_penyimpanan` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `lokasi_penyimpanan` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -109,15 +109,15 @@ INSERT INTO `obat` (`id_obat`, `id_kategori`, `nama_obat`, `harga_beli`, `harga_
 --
 
 CREATE TABLE `penerimaan_obat` (
-  `id_penerimaan` int NOT NULL,
-  `id_obat` int NOT NULL,
-  `id_supplier` int NOT NULL,
-  `jumlah_terima` int NOT NULL,
+  `id_penerimaan` int(11) NOT NULL,
+  `id_obat` int(11) NOT NULL,
+  `id_supplier` int(11) NOT NULL,
+  `jumlah_terima` int(11) NOT NULL,
   `harga_satuan` decimal(10,2) NOT NULL,
   `total_harga` decimal(10,2) NOT NULL,
   `tanggal_penerimaan` date NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -135,15 +135,15 @@ INSERT INTO `penerimaan_obat` (`id_penerimaan`, `id_obat`, `id_supplier`, `jumla
 --
 
 CREATE TABLE `pengeluaran_obat` (
-  `id_pengeluaran` int NOT NULL,
-  `id_obat` int NOT NULL,
-  `jenis_pengeluaran` enum('penjualan','internal') COLLATE utf8mb4_general_ci NOT NULL,
-  `jumlah_keluar` int NOT NULL,
+  `id_pengeluaran` int(11) NOT NULL,
+  `id_obat` int(11) NOT NULL,
+  `jenis_pengeluaran` enum('penjualan','internal') NOT NULL,
+  `jumlah_keluar` int(11) NOT NULL,
   `harga_satuan` decimal(10,2) NOT NULL,
   `total_harga` decimal(10,2) NOT NULL,
   `tanggal_pengeluaran` date NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -160,14 +160,14 @@ INSERT INTO `pengeluaran_obat` (`id_pengeluaran`, `id_obat`, `jenis_pengeluaran`
 --
 
 CREATE TABLE `stok_log` (
-  `id_log` int NOT NULL,
-  `id_obat` int NOT NULL,
-  `jenis_perubahan` enum('penerimaan','pengeluaran') COLLATE utf8mb4_general_ci NOT NULL,
-  `jumlah_perubahan` int NOT NULL,
-  `stok_awal` int NOT NULL,
-  `stok_akhir` int NOT NULL,
-  `tanggal_perubahan` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `keterangan` text COLLATE utf8mb4_general_ci NOT NULL
+  `id_log` int(11) NOT NULL,
+  `id_obat` int(11) NOT NULL,
+  `jenis_perubahan` enum('penerimaan','pengeluaran') NOT NULL,
+  `jumlah_perubahan` int(11) NOT NULL,
+  `stok_awal` int(11) NOT NULL,
+  `stok_akhir` int(11) NOT NULL,
+  `tanggal_perubahan` timestamp NULL DEFAULT current_timestamp(),
+  `keterangan` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -189,12 +189,12 @@ INSERT INTO `stok_log` (`id_log`, `id_obat`, `jenis_perubahan`, `jumlah_perubaha
 --
 
 CREATE TABLE `supplier` (
-  `id_supplier` int NOT NULL,
-  `nama_supplier` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `kontak_supplier` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `alamat_supplier` text COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id_supplier` int(11) NOT NULL,
+  `nama_supplier` varchar(100) NOT NULL,
+  `kontak_supplier` varchar(20) DEFAULT NULL,
+  `alamat_supplier` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -215,17 +215,17 @@ INSERT INTO `supplier` (`id_supplier`, `nama_supplier`, `kontak_supplier`, `alam
 --
 
 CREATE TABLE `users` (
-  `id_user` int NOT NULL,
-  `id_role` int DEFAULT NULL,
-  `id_active` int DEFAULT '2',
-  `en_user` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `token` char(6) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image` varchar(100) COLLATE utf8mb4_general_ci DEFAULT 'default.svg',
-  `email` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `password` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
+  `id_user` int(11) NOT NULL,
+  `id_role` int(11) DEFAULT NULL,
+  `id_active` int(11) DEFAULT 2,
+  `en_user` varchar(75) DEFAULT NULL,
+  `token` char(6) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `image` varchar(100) DEFAULT 'default.svg',
+  `email` varchar(75) DEFAULT NULL,
+  `password` varchar(75) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -234,7 +234,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id_user`, `id_role`, `id_active`, `en_user`, `token`, `name`, `image`, `email`, `password`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, NULL, NULL, 'developer', 'default.svg', 'developer@gmail.com', '$2y$10$//KMATh3ibPoI3nHFp7x/u7vnAbo2WyUgmI4x0CVVrH8ajFhMvbjG', '2024-09-25 10:13:18', '2024-09-25 10:13:18'),
-(2, 2, 1, NULL, NULL, 'admin', 'default.svg', 'admin@gmail.com', '$2y$10$//KMATh3ibPoI3nHFp7x/u7vnAbo2WyUgmI4x0CVVrH8ajFhMvbjG', '2024-09-25 10:13:18', '2024-09-25 10:13:18');
+(2, 2, 1, NULL, NULL, 'Administrator', 'default.svg', 'admin@gmail.com', '$2y$10$//KMATh3ibPoI3nHFp7x/u7vnAbo2WyUgmI4x0CVVrH8ajFhMvbjG', '2024-09-25 10:13:18', '2024-09-25 10:13:18'),
+(3, 3, 1, '2y10k8t3bpLsHxtOhxRd4saegRdkLtzeVjssttVKnI2RgbDP6PpGn1O', '411633', 'Pemilik Apotek', 'default.svg', 'pemilikapotek@gmail.com', '$2y$10$yvs7bx2bPvWj4q/BfckDx.bLPsbkLd8r3mNa2feURVR5x97QhwVPa', '2025-06-11 21:53:40', '2025-06-11 21:53:40'),
+(4, 4, 1, '2y1079uCOuFZBtGXYS0UkPGjSoFBBvi5NnKmAhEWAbr38rAGChpNoha', '243272', 'Staf Apotek', 'default.svg', 'stafapotek@gmail.com', '$2y$10$lCcLcEaL2WsZ/LkPkfGmqOzeNWGlSlQTOZaBcEUcBJI69ww2MlEDK', '2025-06-11 21:54:32', '2025-06-11 21:54:32');
 
 --
 -- Trigger `users`
@@ -258,9 +260,9 @@ DELIMITER ;
 --
 
 CREATE TABLE `user_access_menu` (
-  `id_access_menu` int NOT NULL,
-  `id_role` int DEFAULT NULL,
-  `id_menu` int DEFAULT NULL
+  `id_access_menu` int(11) NOT NULL,
+  `id_role` int(11) DEFAULT NULL,
+  `id_menu` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -271,7 +273,10 @@ INSERT INTO `user_access_menu` (`id_access_menu`, `id_role`, `id_menu`) VALUES
 (1, 1, 1),
 (2, 1, 2),
 (3, 1, 3),
-(4, 2, 3);
+(4, 2, 3),
+(5, 2, 1),
+(6, 3, 3),
+(7, 4, 3);
 
 -- --------------------------------------------------------
 
@@ -280,9 +285,9 @@ INSERT INTO `user_access_menu` (`id_access_menu`, `id_role`, `id_menu`) VALUES
 --
 
 CREATE TABLE `user_access_sub_menu` (
-  `id_access_sub_menu` int NOT NULL,
-  `id_role` int DEFAULT NULL,
-  `id_sub_menu` int DEFAULT NULL
+  `id_access_sub_menu` int(11) NOT NULL,
+  `id_role` int(11) DEFAULT NULL,
+  `id_sub_menu` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -307,7 +312,18 @@ INSERT INTO `user_access_sub_menu` (`id_access_sub_menu`, `id_role`, `id_sub_men
 (16, 2, 10),
 (17, 2, 11),
 (18, 2, 12),
-(19, 2, 7);
+(19, 2, 7),
+(21, 2, 1),
+(22, 3, 8),
+(23, 3, 9),
+(24, 3, 10),
+(25, 3, 11),
+(26, 3, 12),
+(27, 4, 8),
+(28, 4, 9),
+(29, 4, 10),
+(30, 4, 11),
+(31, 4, 12);
 
 -- --------------------------------------------------------
 
@@ -316,8 +332,8 @@ INSERT INTO `user_access_sub_menu` (`id_access_sub_menu`, `id_role`, `id_sub_men
 --
 
 CREATE TABLE `user_menu` (
-  `id_menu` int NOT NULL,
-  `menu` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id_menu` int(11) NOT NULL,
+  `menu` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -336,8 +352,8 @@ INSERT INTO `user_menu` (`id_menu`, `menu`) VALUES
 --
 
 CREATE TABLE `user_role` (
-  `id_role` int NOT NULL,
-  `role` varchar(35) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id_role` int(11) NOT NULL,
+  `role` varchar(35) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -347,7 +363,8 @@ CREATE TABLE `user_role` (
 INSERT INTO `user_role` (`id_role`, `role`) VALUES
 (1, 'Developer'),
 (2, 'Administrator'),
-(3, 'Member');
+(3, 'Pemilik Apotek'),
+(4, 'Staf Apotek');
 
 -- --------------------------------------------------------
 
@@ -356,8 +373,8 @@ INSERT INTO `user_role` (`id_role`, `role`) VALUES
 --
 
 CREATE TABLE `user_status` (
-  `id_status` int NOT NULL,
-  `status` varchar(35) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id_status` int(11) NOT NULL,
+  `status` varchar(35) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -375,12 +392,12 @@ INSERT INTO `user_status` (`id_status`, `status`) VALUES
 --
 
 CREATE TABLE `user_sub_menu` (
-  `id_sub_menu` int NOT NULL,
-  `id_menu` int DEFAULT NULL,
-  `id_active` int DEFAULT '2',
-  `title` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `url` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `icon` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id_sub_menu` int(11) NOT NULL,
+  `id_menu` int(11) DEFAULT NULL,
+  `id_active` int(11) DEFAULT 2,
+  `title` varchar(50) DEFAULT NULL,
+  `url` varchar(50) DEFAULT NULL,
+  `icon` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -510,85 +527,85 @@ ALTER TABLE `user_sub_menu`
 -- AUTO_INCREMENT untuk tabel `auth`
 --
 ALTER TABLE `auth`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `kategori_obat`
 --
 ALTER TABLE `kategori_obat`
-  MODIFY `id_kategori` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_kategori` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT untuk tabel `obat`
 --
 ALTER TABLE `obat`
-  MODIFY `id_obat` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_obat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `penerimaan_obat`
 --
 ALTER TABLE `penerimaan_obat`
-  MODIFY `id_penerimaan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_penerimaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `pengeluaran_obat`
 --
 ALTER TABLE `pengeluaran_obat`
-  MODIFY `id_pengeluaran` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_pengeluaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `stok_log`
 --
 ALTER TABLE `stok_log`
-  MODIFY `id_log` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_log` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `supplier`
 --
 ALTER TABLE `supplier`
-  MODIFY `id_supplier` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_supplier` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id_access_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_access_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_access_sub_menu`
 --
 ALTER TABLE `user_access_sub_menu`
-  MODIFY `id_access_sub_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_access_sub_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_menu`
 --
 ALTER TABLE `user_menu`
-  MODIFY `id_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_role`
 --
 ALTER TABLE `user_role`
-  MODIFY `id_role` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_status`
 --
 ALTER TABLE `user_status`
-  MODIFY `id_status` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id_sub_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_sub_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
