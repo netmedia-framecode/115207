@@ -248,7 +248,7 @@ if (!isset($_SESSION["project_deo_gratias_farma"]["users"])) {
                 </table>
             </body>
           </html>";
-          smtp_mail($to, $subject, $message, "", "", 0, 0, true);
+          // smtp_mail($to, $subject, $message, "", "", 0, 0, true);
           $_SESSION['data_auth'] = ['en_user' => $en_user];
           $sql = "INSERT INTO users(en_user,token,name,email,password) VALUES('$en_user','$token','$data[name]','$data[email]','$password')";
         }
@@ -658,21 +658,28 @@ if (!isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       return false;
     } else if (mysqli_num_rows($checkAccount) > 0) {
       $row = mysqli_fetch_assoc($checkAccount);
-      if (password_verify($data['password'], $row["password"])) {
-        $_SESSION["project_deo_gratias_farma"]["users"] = [
-          "id" => $row["id_user"],
-          "id_role" => $row["id_role"],
-          "role" => $row["role"],
-          "email" => $row["email"],
-          "name" => $row["name"],
-          "image" => $row["image"]
-        ];
-        return mysqli_affected_rows($conn);
-      } else {
-        $message = "Maaf, kata sandi yang anda masukan salah.";
-        $message_type = "danger";
-        alert($message, $message_type);
-        return false;
+      if($row['id_active'] == '1') {
+        if (password_verify($data['password'], $row["password"])) {
+          $_SESSION["project_deo_gratias_farma"]["users"] = [
+            "id" => $row["id_user"],
+            "id_role" => $row["id_role"],
+            "role" => $row["role"],
+            "email" => $row["email"],
+            "name" => $row["name"],
+            "image" => $row["image"]
+          ];
+          return mysqli_affected_rows($conn);
+        } else {
+          $message = "Maaf, kata sandi yang anda masukan salah.";
+          $message_type = "danger";
+          alert($message, $message_type);
+          return false;
+        }
+      }else if($row['id_active'] == '2'){
+          $message = "Maaf, akun anda belum di verifikasi oleh admin.";
+          $message_type = "danger";
+          alert($message, $message_type);
+          return false;
       }
     }
   }

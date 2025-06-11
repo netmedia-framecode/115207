@@ -8,7 +8,11 @@ if (isset($_POST["register"])) {
     return valid($conn, $value);
   }, $_POST);
   if (register($conn, $validated_post, $action = 'insert') > 0) {
-    header("Location: verification?en=" . $_SESSION['data_auth']['en_user']);
+    $message = "Akun anda telah terdaftar. Silakan menunggu admin memverifikasi akun anda dalam waktu 1/24 jam.";
+    $message_type = "success";
+    alert($message, $message_type);
+    header("Location: ./");
+    // header("Location: verification?en=" . $_SESSION['data_auth']['en_user']);
     exit();
   }
 }
