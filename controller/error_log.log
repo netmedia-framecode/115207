@@ -36,3 +36,10 @@
 [2024-09-25 21:43:42] Error [2]: foreach() argument must be of type array|object, null given in D:\laragon\www\apps\tugas\deo_gratias_farma\views\index.php on line 167
 [2024-09-25 21:44:08] Error [2]: Undefined variable $view_kategori_obat in D:\laragon\www\apps\tugas\deo_gratias_farma\views\index.php on line 167
 [2024-09-25 21:44:08] Error [2]: foreach() argument must be of type array|object, null given in D:\laragon\www\apps\tugas\deo_gratias_farma\views\index.php on line 167
+[2025-06-25 02:31:06] Error [2]: Undefined variable $view_penerimaan_obat in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 82
+[2025-06-25 02:33:59] Error [2]: Undefined variable $view_penerimaan_obat in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 83
+[2025-06-25 02:33:59] Error [2]: foreach() argument must be of type array|object, null given in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 83
+[2025-06-25 02:34:00] Error [2]: Undefined variable $view_penerimaan_obat in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 83
+[2025-06-25 02:34:00] Error [2]: foreach() argument must be of type array|object, null given in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 83
+[2025-06-25 03:26:20] Error [2]: Undefined variable $view_obat in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 178
+[2025-06-25 03:26:20] Error [2]: foreach() argument must be of type array|object, null given in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 178

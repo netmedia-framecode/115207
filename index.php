@@ -15,18 +15,6 @@ require_once("templates/top.php");
               <div class="banner-btn">
                 <a href="#daftar-obat" class="lab-btn"><span>Daftar Obat <i
                       class="icofont-rounded-double-right"></i></span></a>
-                <div class="video-btn">
-                  <a href="https://www.youtube.com/embed/" data-rel="lightcase" title="Watch Now"
-                    class="video-icon">
-                    <img src="<?= $baseURL?>assets/img/icon-01.png" alt="video">
-                    <div class="wave-wrapper">
-                      <div class="wave-pulse wave-pulse-1"></div>
-                      <div class="wave-pulse wave-pulse-2"></div>
-                      <div class="wave-pulse wave-pulse-3"></div>
-                      <div class="wave-pulse wave-pulse-4"></div>
-                    </div>
-                  </a>
-                </div>
               </div>
             </div>
           </div>
@@ -36,65 +24,6 @@ require_once("templates/top.php");
   </div>
 </section>
 <!-- banner section ending here -->
-
-<!-- about section start here -->
-<section class="about style-1 padding-tb bg-ash">
-  <div class="pattan-shape"></div>
-  <div class="container">
-    <div class="section-header">
-      <h2>Layanan Kesehatan <span class="theme-color">Deo Gratias Farma</span></h2>
-    </div>
-    <div class="section-wrapper">
-      <div class="row justify-content-center no-gutters">
-        <div class="col-xl-3 col-md-6 col-12">
-          <div class="about-item style-1 text-center">
-            <div class="about-thumb">
-              <img src="<?= $baseURL?>assets/img/about/01.png" alt="about">
-            </div>
-            <div class="about-content">
-              <h5>Medical Treatment</h5>
-              <p>Caborin levera then andin tha qualit bwdh thenig covae thm anying value cordin</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-md-6 col-12">
-          <div class="about-item style-1 text-center">
-            <div class="about-thumb">
-              <img src="<?= $baseURL?>assets/img/about/02.png" alt="about">
-            </div>
-            <div class="about-content">
-              <h5>Emergency Help</h5>
-              <p>Caborin levera then andin tha qualit bwdh thenig covae thm anying value cordin</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-md-6 col-12">
-          <div class="about-item style-1 text-center">
-            <div class="about-thumb">
-              <img src="<?= $baseURL?>assets/img/about/03.png" alt="about">
-            </div>
-            <div class="about-content">
-              <h5>Locations & Directions</h5>
-              <p>Caborin levera then andin tha qualit bwdh thenig covae thm anying value cordin</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-md-6 col-12">
-          <div class="about-item style-1 text-center">
-            <div class="about-thumb">
-              <img src="<?= $baseURL?>assets/img/about/04.png" alt="about">
-            </div>
-            <div class="about-content">
-              <h5>Qualified Doctors</h5>
-              <p>Caborin levera then andin tha qualit bwdh thenig covae thm anying value cordin</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- about section ending here -->
 
 <!-- Services section start here -->
 <section class="service-section style-1 padding-tb bg-white" id="daftar-obat">

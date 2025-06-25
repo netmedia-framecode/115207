@@ -1017,6 +1017,84 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
     return mysqli_affected_rows($conn);
   }
 
+  function exportPenerimaanObatToPDF($conn)
+  {
+    $query = "SELECT penerimaan_obat.*, obat.nama_obat, supplier.nama_supplier FROM penerimaan_obat JOIN obat ON penerimaan_obat.id_obat = obat.id_obat JOIN supplier ON penerimaan_obat.id_supplier = supplier.id_supplier";
+    $result = mysqli_query($conn, $query);
+    $mpdf = new \Mpdf\Mpdf();
+    $html = '<h1 style="text-align: center;">LAPORAN PENERIMAAN OBAT DEO GRATIAS FARMA</h1>';
+    $html .= '<table border="1" cellspacing="0" cellpadding="5">
+                <tr>
+                      <th>No</th>
+                      <th>Nama Obat</th>
+                      <th>Nama Supplier</th>
+                      <th>Jumlah Terima</th>
+                      <th>Harga Satuan</th>
+                      <th>Total Harga</th>
+                      <th>Tgl Penerimaan</th>
+                </tr>';
+    $no = 1;
+    while ($data = mysqli_fetch_assoc($result)) {
+      $html .= '<tr>
+                    <td>' . $no++ . '</td>
+                        <td>'.$data['nama_obat'] .'</td>
+                        <td>'.$data['nama_supplier'] .'</td>
+                        <td>'.$data['jumlah_terima'] .'</td>
+                        <td>Rp.'.number_format($data['harga_satuan']) .'</td>
+                        <td>Rp.'.number_format($data['total_harga']) .'</td>
+                        <td>'.$data['tanggal_penerimaan'] .'</td>
+                 </tr>';
+    }
+    $html .= '</table>';
+    $mpdf->WriteHTML($html);
+    $mpdf->Output('laporan_penerimaan_obat.pdf', 'D');
+  }
+
+  function exportPenerimaanObatToExcel($conn)
+  {
+    $query = "SELECT penerimaan_obat.*, obat.nama_obat, supplier.nama_supplier FROM penerimaan_obat JOIN obat ON penerimaan_obat.id_obat = obat.id_obat JOIN supplier ON penerimaan_obat.id_supplier = supplier.id_supplier";
+    $result = mysqli_query($conn, $query);
+    $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $spreadsheet->getProperties()->setCreator('Creator')
+      ->setLastModifiedBy('Last Modified By')
+      ->setTitle('Data Penerimaan Obat')
+      ->setSubject('Data Penerimaan Obat')
+      ->setDescription('Data Penerimaan Obat')
+      ->setKeywords('Data Penerimaan Obat')
+      ->setCategory('Data');
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setCellValue('A1', 'No');
+    $sheet->setCellValue('B1', 'Nama Obat');
+    $sheet->setCellValue('C1', 'Nama Supplier');
+    $sheet->setCellValue('D1', 'Jumlah Terima');
+    $sheet->setCellValue('E1', 'Harga Satuan');
+    $sheet->setCellValue('F1', 'Total Harga');
+    $sheet->setCellValue('G1', 'Tgl Penerimaan');
+    $row = 2;
+    $no = 1;
+    while ($row_data = mysqli_fetch_assoc($result)) {
+      $sheet->setCellValue('A' . $row, $no);
+      $sheet->setCellValue('B' . $row, $row_data['nama_obat']);
+      $sheet->setCellValue('C' . $row, $row_data['nama_supplier']);
+      $sheet->setCellValue('D' . $row, $row_data['jumlah_terima']);
+      $sheet->setCellValue('E' . $row, 'Rp.' . number_format($row_data['harga_satuan']));
+      $sheet->setCellValue('F' . $row, 'Rp.' . number_format($row_data['total_harga']));
+      $sheet->setCellValue('G' . $row, $row_data['tanggal_penerimaan']);
+      $row++;
+      $no++;
+    }
+    foreach (range('A', 'G') as $column) {
+      $sheet->getColumnDimension($column)->setAutoSize(true);
+    }
+    $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $filename = 'laporan_penerimaan_obat.xlsx';
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+    $writer->save('php://output');
+    exit;
+  }
+
   function penerimaan_obat($conn, $data, $action)
   {
     if ($action == "insert") {
@@ -1073,7 +1151,92 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       mysqli_multi_query($conn, $sql);
     }
 
+    if ($action == "export") {
+      if ($data['format_file'] === "pdf") {
+        exportPenerimaanObatToPDF($conn);
+      } else if ($data['format_file'] === "excel") {
+        exportPenerimaanObatToExcel($conn);
+      }
+    }
+
     return mysqli_affected_rows($conn);
+  }
+
+  function exportPengeluaranObatToPDF($conn)
+  {
+    $query = "SELECT pengeluaran_obat.*, obat.nama_obat FROM pengeluaran_obat JOIN obat ON pengeluaran_obat.id_obat = obat.id_obat";
+    $result = mysqli_query($conn, $query);
+    $mpdf = new \Mpdf\Mpdf();
+    $html = '<h1 style="text-align: center;">LAPORAN PENGELUARAN OBAT DEO GRATIAS FARMA</h1>';
+    $html .= '<table border="1" cellspacing="0" cellpadding="5">
+                <tr>
+                      <th>Nama Obat</th>
+                      <th>Jenis Pengeluaran</th>
+                      <th>Jumlah Keluar</th>
+                      <th>Harga Satuan</th>
+                      <th>Total Harga</th>
+                      <th>Tgl Pengeluaran</th>
+                </tr>';
+    $no = 1;
+    while ($data = mysqli_fetch_assoc($result)) {
+      $html .= '<tr>
+                    <td>' . $no++ . '</td>
+                        <td>'. $data['nama_obat'] .'</td>
+                        <td>'. $data['jenis_pengeluaran'] .'</td>
+                        <td>'. $data['jumlah_keluar'] .'</td>
+                        <td>Rp.'. number_format($data['harga_satuan']) .'</td>
+                        <td>Rp.'. number_format($data['total_harga']) .'</td>
+                        <td>'. $data['tanggal_pengeluaran'] .'</td>
+                 </tr>';
+    }
+    $html .= '</table>';
+    $mpdf->WriteHTML($html);
+    $mpdf->Output('laporan_pengeluaran_obat.pdf', 'D');
+  }
+
+  function exportPengeluaranObatToExcel($conn)
+  {
+    $query = "SELECT pengeluaran_obat.*, obat.nama_obat FROM pengeluaran_obat JOIN obat ON pengeluaran_obat.id_obat = obat.id_obat";
+    $result = mysqli_query($conn, $query);
+    $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $spreadsheet->getProperties()->setCreator('Creator')
+      ->setLastModifiedBy('Last Modified By')
+      ->setTitle('Data Pengeluaran Obat')
+      ->setSubject('Data Pengeluaran Obat')
+      ->setDescription('Data Pengeluaran Obat')
+      ->setKeywords('Data Pengeluaran Obat')
+      ->setCategory('Data');
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setCellValue('A1', 'No');
+    $sheet->setCellValue('B1', 'Nama Obat');
+    $sheet->setCellValue('C1', 'Jenis Pengeluaran');
+    $sheet->setCellValue('D1', 'Jumlah Keluar');
+    $sheet->setCellValue('E1', 'Harga Satuan');
+    $sheet->setCellValue('F1', 'Total Harga');
+    $sheet->setCellValue('G1', 'Tanggal Pengeluaran');
+    $row = 2;
+    $no = 1;
+    while ($row_data = mysqli_fetch_assoc($result)) {
+      $sheet->setCellValue('A' . $row, $no);
+      $sheet->setCellValue('B' . $row, $row_data['nama_obat']);
+      $sheet->setCellValue('C' . $row, $row_data['jenis_pengeluaran']);
+      $sheet->setCellValue('D' . $row, $row_data['jumlah_keluar']);
+      $sheet->setCellValue('E' . $row, 'Rp.' . number_format($row_data['harga_satuan']));
+      $sheet->setCellValue('F' . $row, 'Rp.' . number_format($row_data['total_harga']));
+      $sheet->setCellValue('G' . $row, $row_data['tanggal_pengeluaran']);
+      $row++;
+      $no++;
+    }
+    foreach (range('A', 'G') as $column) {
+      $sheet->getColumnDimension($column)->setAutoSize(true);
+    }
+    $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $filename = 'laporan_pengeluaran_obat.xlsx';
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+    $writer->save('php://output');
+    exit;
   }
 
   function pengeluaran_obat($conn, $data, $action)
@@ -1130,6 +1293,14 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       stok_log($conn,$data['id_obat'],"penerimaan",$data['jumlah_keluar'],$stok_awal,$stok_akhir,$keterangan);
 
       mysqli_multi_query($conn, $sql);
+    }
+
+    if ($action == "export") {
+      if ($data['format_file'] === "pdf") {
+        exportPengeluaranObatToPDF($conn);
+      } else if ($data['format_file'] === "excel") {
+        exportPengeluaranObatToExcel($conn);
+      }
     }
 
     return mysqli_affected_rows($conn);
