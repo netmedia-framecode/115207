@@ -72,7 +72,7 @@ function compressImage($source, $destination, $quality)
   $mime = $imgInfo['mime'];
   // membuat image baru
   switch ($mime) {
-      // proses kode memilih tipe tipe image 
+    // proses kode memilih tipe tipe image 
     case 'image/jpeg':
       $image = imagecreatefromjpeg($source);
       break;
@@ -658,7 +658,7 @@ if (!isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       return false;
     } else if (mysqli_num_rows($checkAccount) > 0) {
       $row = mysqli_fetch_assoc($checkAccount);
-      if($row['id_active'] == '1') {
+      if ($row['id_active'] == '1') {
         if (password_verify($data['password'], $row["password"])) {
           $_SESSION["project_deo_gratias_farma"]["users"] = [
             "id" => $row["id_user"],
@@ -675,11 +675,11 @@ if (!isset($_SESSION["project_deo_gratias_farma"]["users"])) {
           alert($message, $message_type);
           return false;
         }
-      }else if($row['id_active'] == '2'){
-          $message = "Maaf, akun anda belum di verifikasi oleh admin.";
-          $message_type = "danger";
-          alert($message, $message_type);
-          return false;
+      } else if ($row['id_active'] == '2') {
+        $message = "Maaf, akun anda belum di verifikasi oleh admin.";
+        $message_type = "danger";
+        alert($message, $message_type);
+        return false;
       }
     }
   }
@@ -778,7 +778,7 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       $sql = "UPDATE users SET id_role='$data[id_role]', id_active='$data[id_active]' WHERE id_user='$data[id_user]'";
     }
 
-    if( $action == "delete") {
+    if ($action == "delete") {
       $sql = "DELETE FROM users WHERE id_user='$data[id_user]'";
     }
 
@@ -1041,12 +1041,12 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
     while ($data = mysqli_fetch_assoc($result)) {
       $html .= '<tr>
                     <td>' . $no++ . '</td>
-                        <td>'.$data['nama_obat'] .'</td>
-                        <td>'.$data['nama_supplier'] .'</td>
-                        <td>'.$data['jumlah_terima'] .'</td>
-                        <td>Rp.'.number_format($data['harga_satuan']) .'</td>
-                        <td>Rp.'.number_format($data['total_harga']) .'</td>
-                        <td>'.$data['tanggal_penerimaan'] .'</td>
+                        <td>' . $data['nama_obat'] . '</td>
+                        <td>' . $data['nama_supplier'] . '</td>
+                        <td>' . $data['jumlah_terima'] . '</td>
+                        <td>Rp.' . number_format($data['harga_satuan']) . '</td>
+                        <td>Rp.' . number_format($data['total_harga']) . '</td>
+                        <td>' . $data['tanggal_penerimaan'] . '</td>
                  </tr>';
     }
     $html .= '</table>';
@@ -1056,9 +1056,10 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
 
   function exportPenerimaanObatToExcel($conn)
   {
+    global $name_website;
     $query = "SELECT penerimaan_obat.*, obat.nama_obat, supplier.nama_supplier FROM penerimaan_obat JOIN obat ON penerimaan_obat.id_obat = obat.id_obat JOIN supplier ON penerimaan_obat.id_supplier = supplier.id_supplier";
     $result = mysqli_query($conn, $query);
-    $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
     $spreadsheet->getProperties()->setCreator('Creator')
       ->setLastModifiedBy('Last Modified By')
       ->setTitle('Data Penerimaan Obat')
@@ -1067,14 +1068,36 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       ->setKeywords('Data Penerimaan Obat')
       ->setCategory('Data');
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setCellValue('A1', 'No');
-    $sheet->setCellValue('B1', 'Nama Obat');
-    $sheet->setCellValue('C1', 'Nama Supplier');
-    $sheet->setCellValue('D1', 'Jumlah Terima');
-    $sheet->setCellValue('E1', 'Harga Satuan');
-    $sheet->setCellValue('F1', 'Total Harga');
-    $sheet->setCellValue('G1', 'Tgl Penerimaan');
-    $row = 2;
+    $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+    $drawing->setName('Logo');
+    $drawing->setDescription('Logo');
+    $drawing->setPath('../assets/img/logo.png');
+    $drawing->setHeight(100);
+    $drawing->setCoordinates('A1');
+    $drawing->setOffsetX(20);
+    $drawing->setWorksheet($sheet);
+    $sheet->mergeCells('B2:G2');
+    $sheet->setCellValue('B2', $name_website);
+    $sheet->getStyle('B2')->getFont()->setBold(true)->setSize(16);
+    $sheet->getStyle('B2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $sheet->mergeCells('B3:G3');
+    $sheet->setCellValue('B3', 'Laporan Penerimaan Obat');
+    $sheet->getStyle('B3')->getFont()->setSize(12);
+    $sheet->getStyle('B3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $sheet->mergeCells('B4:G4');
+    $sheet->setCellValue('B4', 'Jl. Jenderal Sudirman No. 123, Kupang, NTT'); // Ganti dengan alamat Anda
+    $sheet->getStyle('B4')->getFont()->setSize(10);
+    $sheet->getStyle('B4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $sheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK);
+    $sheet->setCellValue('A7', 'No');
+    $sheet->setCellValue('B7', 'Nama Obat');
+    $sheet->setCellValue('C7', 'Nama Supplier');
+    $sheet->setCellValue('D7', 'Jumlah Terima');
+    $sheet->setCellValue('E7', 'Harga Satuan');
+    $sheet->setCellValue('F7', 'Total Harga');
+    $sheet->setCellValue('G7', 'Tgl Penerimaan');
+    $sheet->getStyle('A7:G7')->getFont()->setBold(true);
+    $row = 8;
     $no = 1;
     while ($row_data = mysqli_fetch_assoc($result)) {
       $sheet->setCellValue('A' . $row, $no);
@@ -1087,10 +1110,19 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       $row++;
       $no++;
     }
+    $last_row = $row - 1;
+    $styleArray = [
+      'borders' => [
+        'allBorders' => [
+          'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+        ],
+      ],
+    ];
+    $sheet->getStyle('A7:G' . $last_row)->applyFromArray($styleArray);
     foreach (range('A', 'G') as $column) {
       $sheet->getColumnDimension($column)->setAutoSize(true);
     }
-    $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
     $filename = 'laporan_penerimaan_obat.xlsx';
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename="' . $filename . '"');
@@ -1107,35 +1139,35 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
 
       $obat = "SELECT stok_tersedia FROM obat WHERE id_obat='$data[id_obat]'";
       $view_obat = mysqli_query($conn, $obat);
-      $data_obat=mysqli_fetch_assoc($view_obat);
-      $stok_awal=$data_obat['stok_tersedia'];
-      $stok_akhir=$data_obat['stok_tersedia']+$data['jumlah_terima'];
-      $keterangan="Menambahkan data penerimaan obat baru.";
-      stok_log($conn,$data['id_obat'],"penerimaan",$data['jumlah_terima'],$stok_awal,$stok_akhir,$keterangan);
+      $data_obat = mysqli_fetch_assoc($view_obat);
+      $stok_awal = $data_obat['stok_tersedia'];
+      $stok_akhir = $data_obat['stok_tersedia'] + $data['jumlah_terima'];
+      $keterangan = "Menambahkan data penerimaan obat baru.";
+      stok_log($conn, $data['id_obat'], "penerimaan", $data['jumlah_terima'], $stok_awal, $stok_akhir, $keterangan);
 
       mysqli_multi_query($conn, $sql);
     }
-    
+
     if ($action == "update") {
       $sql = "UPDATE penerimaan_obat SET id_obat = '$data[id_obat]', id_supplier='$data[id_supplier]', jumlah_terima='$data[jumlah_terima]', harga_satuan='$data[harga_satuan]', total_harga='$data[total_harga]', tanggal_penerimaan='$data[tanggal_penerimaan]' WHERE id_penerimaan = '$data[id_penerimaan]';";
 
       $obat = "SELECT stok_tersedia FROM obat WHERE id_obat='$data[id_obat]'";
       $view_obat = mysqli_query($conn, $obat);
-      $data_obat=mysqli_fetch_assoc($view_obat);
-      $stok_awal=$data_obat['stok_tersedia'];
-      $keterangan="Mengubah data penerimaan obat baru.";
+      $data_obat = mysqli_fetch_assoc($view_obat);
+      $stok_awal = $data_obat['stok_tersedia'];
+      $keterangan = "Mengubah data penerimaan obat baru.";
 
       $selisih_jumlah = $data['jumlah_terima'] - $data['jumlah_terimaOld'];
-      if($selisih_jumlah > 0) {
-        $stok_akhir=$data_obat['stok_tersedia']+$selisih_jumlah;
+      if ($selisih_jumlah > 0) {
+        $stok_akhir = $data_obat['stok_tersedia'] + $selisih_jumlah;
         $sql .= "UPDATE obat SET stok_tersedia = stok_tersedia + '$selisih_jumlah' WHERE id_obat = '$data[id_obat]';";
-      } else if($selisih_jumlah < 0) {
+      } else if ($selisih_jumlah < 0) {
         $selisih_jumlah = abs($selisih_jumlah);
-        $stok_akhir=$data_obat['stok_tersedia']-$selisih_jumlah;
+        $stok_akhir = $data_obat['stok_tersedia'] - $selisih_jumlah;
         $sql .= "UPDATE obat SET stok_tersedia = stok_tersedia - '$selisih_jumlah' WHERE id_obat = '$data[id_obat]';";
       }
 
-      stok_log($conn,$data['id_obat'],"penerimaan",$data['jumlah_terima'],$stok_awal,$stok_akhir,$keterangan);
+      stok_log($conn, $data['id_obat'], "penerimaan", $data['jumlah_terima'], $stok_awal, $stok_akhir, $keterangan);
 
       mysqli_multi_query($conn, $sql);
     }
@@ -1146,11 +1178,11 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
 
       $obat = "SELECT stok_tersedia FROM obat WHERE id_obat='$data[id_obat]'";
       $view_obat = mysqli_query($conn, $obat);
-      $data_obat=mysqli_fetch_assoc($view_obat);
-      $stok_awal=$data_obat['stok_tersedia'];
-      $keterangan="Menghapus data penerimaan obat baru.";
-      $stok_akhir=$data_obat['stok_tersedia']-$data['jumlah_terima'];
-      stok_log($conn,$data['id_obat'],"penerimaan",$data['jumlah_terima'],$stok_awal,$stok_akhir,$keterangan);
+      $data_obat = mysqli_fetch_assoc($view_obat);
+      $stok_awal = $data_obat['stok_tersedia'];
+      $keterangan = "Menghapus data penerimaan obat baru.";
+      $stok_akhir = $data_obat['stok_tersedia'] - $data['jumlah_terima'];
+      stok_log($conn, $data['id_obat'], "penerimaan", $data['jumlah_terima'], $stok_awal, $stok_akhir, $keterangan);
 
       mysqli_multi_query($conn, $sql);
     }
@@ -1185,12 +1217,12 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
     while ($data = mysqli_fetch_assoc($result)) {
       $html .= '<tr>
                     <td>' . $no++ . '</td>
-                        <td>'. $data['nama_obat'] .'</td>
-                        <td>'. $data['jenis_pengeluaran'] .'</td>
-                        <td>'. $data['jumlah_keluar'] .'</td>
-                        <td>Rp.'. number_format($data['harga_satuan']) .'</td>
-                        <td>Rp.'. number_format($data['total_harga']) .'</td>
-                        <td>'. $data['tanggal_pengeluaran'] .'</td>
+                        <td>' . $data['nama_obat'] . '</td>
+                        <td>' . $data['jenis_pengeluaran'] . '</td>
+                        <td>' . $data['jumlah_keluar'] . '</td>
+                        <td>Rp.' . number_format($data['harga_satuan']) . '</td>
+                        <td>Rp.' . number_format($data['total_harga']) . '</td>
+                        <td>' . $data['tanggal_pengeluaran'] . '</td>
                  </tr>';
     }
     $html .= '</table>';
@@ -1200,9 +1232,10 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
 
   function exportPengeluaranObatToExcel($conn)
   {
+    global $name_website;
     $query = "SELECT pengeluaran_obat.*, obat.nama_obat FROM pengeluaran_obat JOIN obat ON pengeluaran_obat.id_obat = obat.id_obat";
     $result = mysqli_query($conn, $query);
-    $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
     $spreadsheet->getProperties()->setCreator('Creator')
       ->setLastModifiedBy('Last Modified By')
       ->setTitle('Data Pengeluaran Obat')
@@ -1211,14 +1244,36 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       ->setKeywords('Data Pengeluaran Obat')
       ->setCategory('Data');
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setCellValue('A1', 'No');
-    $sheet->setCellValue('B1', 'Nama Obat');
-    $sheet->setCellValue('C1', 'Jenis Pengeluaran');
-    $sheet->setCellValue('D1', 'Jumlah Keluar');
-    $sheet->setCellValue('E1', 'Harga Satuan');
-    $sheet->setCellValue('F1', 'Total Harga');
-    $sheet->setCellValue('G1', 'Tanggal Pengeluaran');
-    $row = 2;
+    $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+    $drawing->setName('Logo');
+    $drawing->setDescription('Logo');
+    $drawing->setPath('../assets/img/logo.png');
+    $drawing->setHeight(100);
+    $drawing->setCoordinates('A1');
+    $drawing->setOffsetX(20);
+    $drawing->setWorksheet($sheet);
+    $sheet->mergeCells('B2:G2');
+    $sheet->setCellValue('B2', $name_website);
+    $sheet->getStyle('B2')->getFont()->setBold(true)->setSize(16);
+    $sheet->getStyle('B2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $sheet->mergeCells('B3:G3');
+    $sheet->setCellValue('B3', 'Laporan Pengeluaran Obat');
+    $sheet->getStyle('B3')->getFont()->setSize(12);
+    $sheet->getStyle('B3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $sheet->mergeCells('B4:G4');
+    $sheet->setCellValue('B4', 'Jl. Jenderal Sudirman No. 123, Kupang, NTT');
+    $sheet->getStyle('B4')->getFont()->setSize(10);
+    $sheet->getStyle('B4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $sheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK);
+    $sheet->setCellValue('A7', 'No');
+    $sheet->setCellValue('B7', 'Nama Obat');
+    $sheet->setCellValue('C7', 'Jenis Pengeluaran');
+    $sheet->setCellValue('D7', 'Jumlah Keluar');
+    $sheet->setCellValue('E7', 'Harga Satuan');
+    $sheet->setCellValue('F7', 'Total Harga');
+    $sheet->setCellValue('G7', 'Tanggal Pengeluaran');
+    $sheet->getStyle('A7:G7')->getFont()->setBold(true);
+    $row = 8;
     $no = 1;
     while ($row_data = mysqli_fetch_assoc($result)) {
       $sheet->setCellValue('A' . $row, $no);
@@ -1231,10 +1286,19 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       $row++;
       $no++;
     }
+    $last_row = $row - 1;
+    $styleArray = [
+      'borders' => [
+        'allBorders' => [
+          'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+        ],
+      ],
+    ];
+    $sheet->getStyle('A7:G' . $last_row)->applyFromArray($styleArray);
     foreach (range('A', 'G') as $column) {
       $sheet->getColumnDimension($column)->setAutoSize(true);
     }
-    $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
     $filename = 'laporan_pengeluaran_obat.xlsx';
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename="' . $filename . '"');
@@ -1251,11 +1315,11 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
 
       $obat = "SELECT stok_tersedia FROM obat WHERE id_obat='$data[id_obat]'";
       $view_obat = mysqli_query($conn, $obat);
-      $data_obat=mysqli_fetch_assoc($view_obat);
-      $stok_awal=$data_obat['stok_tersedia'];
-      $stok_akhir=$data_obat['stok_tersedia']+$data['jumlah_keluar'];
-      $keterangan="Menambahkan data pengeluaran obat dari jenis pengeluaran ".$data['jenis_pengeluaran'].".";
-      stok_log($conn,$data['id_obat'],"penerimaan",$data['jumlah_keluar'],$stok_awal,$stok_akhir,$keterangan);
+      $data_obat = mysqli_fetch_assoc($view_obat);
+      $stok_awal = $data_obat['stok_tersedia'];
+      $stok_akhir = $data_obat['stok_tersedia'] + $data['jumlah_keluar'];
+      $keterangan = "Menambahkan data pengeluaran obat dari jenis pengeluaran " . $data['jenis_pengeluaran'] . ".";
+      stok_log($conn, $data['id_obat'], "penerimaan", $data['jumlah_keluar'], $stok_awal, $stok_akhir, $keterangan);
 
       mysqli_multi_query($conn, $sql);
     }
@@ -1265,21 +1329,21 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
 
       $obat = "SELECT stok_tersedia FROM obat WHERE id_obat='$data[id_obat]'";
       $view_obat = mysqli_query($conn, $obat);
-      $data_obat=mysqli_fetch_assoc($view_obat);
-      $stok_awal=$data_obat['stok_tersedia'];
-      $keterangan="Mengubah data pengeluaran obat dari jenis pengeluaran ".$data['jenis_pengeluaran'].".";
+      $data_obat = mysqli_fetch_assoc($view_obat);
+      $stok_awal = $data_obat['stok_tersedia'];
+      $keterangan = "Mengubah data pengeluaran obat dari jenis pengeluaran " . $data['jenis_pengeluaran'] . ".";
 
       $selisih_jumlah = $data['jumlah_keluar'] - $data['jumlah_keluarOld'];
-      if($selisih_jumlah > 0) {
-        $stok_akhir=$data_obat['stok_tersedia']-$selisih_jumlah;
+      if ($selisih_jumlah > 0) {
+        $stok_akhir = $data_obat['stok_tersedia'] - $selisih_jumlah;
         $sql .= "UPDATE obat SET stok_tersedia = stok_tersedia - '$selisih_jumlah' WHERE id_obat = '$data[id_obat]';";
-      } else if($selisih_jumlah < 0) {
+      } else if ($selisih_jumlah < 0) {
         $selisih_jumlah = abs($selisih_jumlah);
-        $stok_akhir=$data_obat['stok_tersedia']+$selisih_jumlah;
+        $stok_akhir = $data_obat['stok_tersedia'] + $selisih_jumlah;
         $sql .= "UPDATE obat SET stok_tersedia = stok_tersedia + '$selisih_jumlah' WHERE id_obat = '$data[id_obat]';";
       }
 
-      stok_log($conn,$data['id_obat'],"penerimaan",$data['jumlah_keluar'],$stok_awal,$stok_akhir,$keterangan);
+      stok_log($conn, $data['id_obat'], "penerimaan", $data['jumlah_keluar'], $stok_awal, $stok_akhir, $keterangan);
 
       mysqli_multi_query($conn, $sql);
     }
@@ -1290,11 +1354,11 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
 
       $obat = "SELECT stok_tersedia FROM obat WHERE id_obat='$data[id_obat]'";
       $view_obat = mysqli_query($conn, $obat);
-      $data_obat=mysqli_fetch_assoc($view_obat);
-      $stok_awal=$data_obat['stok_tersedia'];
-      $keterangan="Menghapus data pengeluaran obat dari jenis pengeluaran ".$data['jenis_pengeluaran'].".";
-      $stok_akhir=$data_obat['stok_tersedia']+$data['jumlah_keluar'];
-      stok_log($conn,$data['id_obat'],"penerimaan",$data['jumlah_keluar'],$stok_awal,$stok_akhir,$keterangan);
+      $data_obat = mysqli_fetch_assoc($view_obat);
+      $stok_awal = $data_obat['stok_tersedia'];
+      $keterangan = "Menghapus data pengeluaran obat dari jenis pengeluaran " . $data['jenis_pengeluaran'] . ".";
+      $stok_akhir = $data_obat['stok_tersedia'] + $data['jumlah_keluar'];
+      stok_log($conn, $data['id_obat'], "penerimaan", $data['jumlah_keluar'], $stok_awal, $stok_akhir, $keterangan);
 
       mysqli_multi_query($conn, $sql);
     }
@@ -1332,4 +1396,3 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
     return mysqli_affected_rows($conn);
   }
 }
-
