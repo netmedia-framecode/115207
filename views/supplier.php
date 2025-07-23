@@ -23,6 +23,7 @@ require_once("../templates/views_top.php"); ?>
               <th class="text-center">Nama Supplier</th>
               <th class="text-center">Kontak Supplier</th>
               <th class="text-center">Alamat Supplier</th>
+              <th class="text-center">Jenis Obat</th>
               <?php if ($id_role <= 2) { ?>
                 <th class="text-center" style="width: 200px;">Aksi</th>
               <?php } ?>
@@ -33,6 +34,7 @@ require_once("../templates/views_top.php"); ?>
               <th class="text-center">Nama Supplier</th>
               <th class="text-center">Kontak Supplier</th>
               <th class="text-center">Alamat Supplier</th>
+              <th class="text-center">Jenis Obat</th>
               <?php if ($id_role <= 2) { ?>
                 <th class="text-center">Aksi</th>
               <?php } ?>
@@ -44,6 +46,7 @@ require_once("../templates/views_top.php"); ?>
                 <td><?= $data['nama_supplier'] ?></td>
                 <td><?= $data['kontak_supplier'] ?></td>
                 <td><?= $data['alamat_supplier'] ?></td>
+                <td><?= $data['jenis_obat'] ?></td>
                 <?php if ($id_role <= 2) { ?>
                   <td class="text-center">
                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
@@ -77,6 +80,10 @@ require_once("../templates/views_top.php"); ?>
                                 <label for="alamat_supplier">Alamat Supplier</label>
                                 <input type="text" name="alamat_supplier" value="<?= $data['alamat_supplier'] ?>" class="form-control" id="alamat_supplier"
                                   required>
+                              </div>
+                              <div class="form-group">
+                                <label for="jenis_obat">Jenis Obat</label>
+                                <input type="text" name="jenis_obat" value="<?= $data['jenis_obat'] ?>" class="form-control" id="jenis_obat" required>
                               </div>
                             </div>
                             <div class="modal-footer justify-content-center border-top-0">
@@ -148,6 +155,10 @@ require_once("../templates/views_top.php"); ?>
               <div class="form-group">
                 <label for="alamat_supplier">Alamat Supplier</label>
                 <input type="text" name="alamat_supplier" class="form-control" id="alamat_supplier" required>
+              </div>
+              <div class="form-group">
+                <label for="jenis_obat">Jenis Obat</label>
+                <input type="text" name="jenis_obat" class="form-control" id="jenis_obat" required>
               </div>
             </div>
             <div class="modal-footer justify-content-center border-top-0">

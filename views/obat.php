@@ -54,7 +54,36 @@ require_once("../templates/views_top.php"); ?>
             <?php foreach ($view_obat as $data) { ?>
               <tr>
                 <td><?= $data['nama_kategori'] ?></td>
-                <td><?= $data['nama_obat'] ?></td>
+                <td>
+                  <?php
+                  date_default_timezone_set('Asia/Makassar');
+                  $hari_ini = new DateTime();
+                  $tanggal_kadaluarsa = new DateTime($data['tanggal_kadaluarsa']);
+                  $hari_ini->setTime(0, 0, 0);
+                  $tanggal_kadaluarsa->setTime(0, 0, 0);
+                  $selisih = $hari_ini->diff($tanggal_kadaluarsa);
+                  $selisih_hari = $selisih->days;
+                  $pesan_tooltip = '';
+                  $warna_ikon = '';
+                  if ($selisih->invert == 1) {
+                    $pesan_tooltip = 'Telah kadaluarsa sejak ' . $selisih_hari . ' hari lalu!';
+                    $warna_ikon = 'text-danger';
+                  }
+                  else if ($selisih_hari <= 30) {
+                    if ($selisih_hari == 0) {
+                      $pesan_tooltip = 'Kadaluarsa HARI INI!';
+                    } else {
+                      $pesan_tooltip = 'Akan kadaluarsa dalam ' . $selisih_hari . ' hari.';
+                    }
+                    $warna_ikon = 'text-warning';
+                  }
+                  if (!empty($pesan_tooltip)) {
+                    echo ' <span class="ml-1" data-toggle="tooltip" data-placement="top" title="' . $pesan_tooltip . '">
+                   <i class="bi bi-exclamation-triangle-fill ' . $warna_ikon . '"></i>
+                 </span>';
+                  }
+                  echo $data['nama_obat'] ?>
+                </td>
                 <td>Rp.<?= number_format($data['harga_beli']) ?></td>
                 <td>Rp.<?= number_format($data['harga_jual']) ?></td>
                 <td><?= $data['stok_tersedia'] ?></td>

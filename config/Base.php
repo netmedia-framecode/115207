@@ -19,3 +19,14 @@ $name_website = "Deo Gratias Farma";
 $select_auth = "SELECT * FROM auth";
 $views_auth = mysqli_query($conn, $select_auth);
 $data_auth = mysqli_fetch_assoc($views_auth);
+
+if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
+  // notification obat
+  $jangka_waktu_hari = 30;
+  $query_kadaluarsa = "SELECT nama_obat, tanggal_kadaluarsa
+                     FROM obat
+                     WHERE tanggal_kadaluarsa BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $jangka_waktu_hari DAY)
+                     ORDER BY tanggal_kadaluarsa ASC";
+  $result_kadaluarsa = mysqli_query($conn, $query_kadaluarsa);
+  $jumlah_notifikasi = mysqli_num_rows($result_kadaluarsa);
+}

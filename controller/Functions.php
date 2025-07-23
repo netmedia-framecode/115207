@@ -778,6 +778,10 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
       $sql = "UPDATE users SET id_role='$data[id_role]', id_active='$data[id_active]' WHERE id_user='$data[id_user]'";
     }
 
+    if( $action == "delete") {
+      $sql = "DELETE FROM users WHERE id_user='$data[id_user]'";
+    }
+
     mysqli_query($conn, $sql);
     return mysqli_affected_rows($conn);
   }
@@ -1002,11 +1006,11 @@ if (isset($_SESSION["project_deo_gratias_farma"]["users"])) {
   function supplier($conn, $data, $action)
   {
     if ($action == "insert") {
-      $sql = "INSERT INTO supplier (nama_supplier,kontak_supplier,alamat_supplier) VALUES ('$data[nama_supplier]','$data[kontak_supplier]','$data[alamat_supplier]')";
+      $sql = "INSERT INTO supplier (nama_supplier,kontak_supplier,alamat_supplier,jenis_obat) VALUES ('$data[nama_supplier]','$data[kontak_supplier]','$data[alamat_supplier]','$data[jenis_obat]')";
     }
 
     if ($action == "update") {
-      $sql = "UPDATE supplier SET nama_supplier = '$data[nama_supplier]', kontak_supplier='$data[kontak_supplier]', alamat_supplier='$data[alamat_supplier]' WHERE id_supplier = '$data[id_supplier]'";
+      $sql = "UPDATE supplier SET nama_supplier = '$data[nama_supplier]', kontak_supplier='$data[kontak_supplier]', alamat_supplier='$data[alamat_supplier]', jenis_obat='$data[jenis_obat]' WHERE id_supplier = '$data[id_supplier]'";
     }
 
     if ($action == "delete") {

@@ -43,3 +43,8 @@
 [2025-06-25 02:34:00] Error [2]: foreach() argument must be of type array|object, null given in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 83
 [2025-06-25 03:26:20] Error [2]: Undefined variable $view_obat in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 178
 [2025-06-25 03:26:20] Error [2]: foreach() argument must be of type array|object, null given in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/views/laporan.php on line 178
+[2025-07-23 07:19:11] Error [2]: Undefined variable $jumlah_notifikasi in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/sections/views_topbar.php on line 14
+[2025-07-23 07:19:14] Error [2]: Undefined variable $jumlah_notifikasi in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/sections/views_topbar.php on line 14
+[2025-07-23 07:19:14] Error [2]: Undefined variable $jumlah_notifikasi in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/sections/views_topbar.php on line 24
+[2025-07-23 07:19:59] Error [2]: Undefined variable $jumlah_notifikasi in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/sections/views_topbar.php on line 14
+[2025-07-23 07:19:59] Error [2]: Undefined variable $jumlah_notifikasi in /Applications/XAMPP/xamppfiles/htdocs/apps/website/tugas/deo_gratias_farma/sections/views_topbar.php on line 24
